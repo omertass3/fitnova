@@ -1,6 +1,7 @@
-import { View, Text, StyleSheet, ScrollView, Pressable, Alert, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Pressable, Alert, Platform, Linking } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { Ionicons } from '@expo/vector-icons';
 
 import { useColors } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -9,6 +10,9 @@ import { XPBar } from '@/components/XPBar';
 import { StatCard } from '@/components/StatCard';
 import { BorderRadius, Spacing } from '@/constants/theme';
 import type { Language } from '@/constants/translations';
+
+const PRIVACY_URL = 'https://omertass3.github.io/fitnova/privacy.html';
+const SUPPORT_URL = 'https://omertass3.github.io/fitnova/support.html';
 
 export default function ProfileScreen() {
   const colors = useColors();
@@ -104,7 +108,7 @@ export default function ProfileScreen() {
                     },
                   ]}
                 >
-                  <Text style={[styles.langText, { color: language === lang ? '#fff' : colors.text }]}>
+                  <Text style={[styles.langText, { color: language === lang ? '#fff' : colors.text }]} numberOfLines={1} adjustsFontSizeToFit>
                     {lang === 'tr' ? t('turkish') : lang === 'en' ? t('english') : lang === 'fr' ? t('french') : t('german')}
                   </Text>
                 </Pressable>
@@ -186,8 +190,37 @@ export default function ProfileScreen() {
             </View>
           </Animated.View>
 
+          {/* Links */}
+          <Animated.View entering={FadeInDown.duration(500).delay(500)} style={[styles.linksCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+            <Pressable
+              onPress={() => Linking.openURL(PRIVACY_URL)}
+              style={({ pressed }) => [styles.linkRow, { opacity: pressed ? 0.6 : 1 }]}
+            >
+              <View style={styles.linkLeft}>
+                <Ionicons name="shield-checkmark-outline" size={20} color={colors.primary} />
+                <Text style={[styles.linkText, { color: colors.text }]}>
+                  {{ tr: 'Gizlilik Politikası', en: 'Privacy Policy', fr: 'Politique de confidentialité', de: 'Datenschutz' }[language]}
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={colors.textSecondary} />
+            </Pressable>
+            <View style={[styles.linkDivider, { backgroundColor: colors.border }]} />
+            <Pressable
+              onPress={() => Linking.openURL(SUPPORT_URL)}
+              style={({ pressed }) => [styles.linkRow, { opacity: pressed ? 0.6 : 1 }]}
+            >
+              <View style={styles.linkLeft}>
+                <Ionicons name="help-circle-outline" size={20} color={colors.primary} />
+                <Text style={[styles.linkText, { color: colors.text }]}>
+                  {{ tr: 'Destek', en: 'Support', fr: 'Assistance', de: 'Support' }[language]}
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={colors.textSecondary} />
+            </Pressable>
+          </Animated.View>
+
           {/* Reset */}
-          <Animated.View entering={FadeInDown.duration(500).delay(500)}>
+          <Animated.View entering={FadeInDown.duration(500).delay(600)}>
             <Pressable
               onPress={handleReset}
               style={({ pressed }) => [
@@ -220,7 +253,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     alignItems: 'center',
   },
-  langText: { fontSize: 15, fontWeight: '600' },
+  langText: { fontSize: 13, fontWeight: '600' },
   avatarCard: {
     alignItems: 'center',
     padding: Spacing.five,
@@ -241,7 +274,7 @@ const styles = StyleSheet.create({
   xpBarWrapper: { width: '100%', gap: Spacing.one },
   xpLabel: { fontSize: 12, textAlign: 'center' },
   statsRow: { flexDirection: 'row', gap: Spacing.two },
-  sectionTitle: { fontSize: 20, fontWeight: '700' },
+  sectionTitle: { fontSize: 20, fontWeight: '700', marginBottom: Spacing.two },
   infoCard: { borderRadius: BorderRadius.lg, borderWidth: 1, overflow: 'hidden' },
   infoRow: {
     flexDirection: 'row',
@@ -251,6 +284,17 @@ const styles = StyleSheet.create({
   },
   infoLabel: { fontSize: 14 },
   infoValue: { fontSize: 14, fontWeight: '600' },
+  linksCard: { borderRadius: BorderRadius.lg, borderWidth: 1, overflow: 'hidden' },
+  linkRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: Spacing.three,
+    paddingHorizontal: Spacing.four,
+  },
+  linkLeft: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  linkText: { fontSize: 15, fontWeight: '500' },
+  linkDivider: { height: 0.5, marginLeft: Spacing.four },
   resetButton: {
     paddingVertical: Spacing.three,
     borderRadius: BorderRadius.lg,

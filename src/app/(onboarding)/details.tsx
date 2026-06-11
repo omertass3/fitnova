@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Pressable, TextInput, ScrollView, Platform } from 'react-native';
+import { View, Text, StyleSheet, Pressable, TextInput, ScrollView, Platform, Keyboard } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
@@ -67,6 +67,7 @@ export default function DetailsScreen() {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
+          onScrollBeginDrag={Keyboard.dismiss}
         >
           {/* Gender */}
           <Animated.View entering={FadeInDown.duration(400).delay(100)}>
@@ -75,7 +76,7 @@ export default function DetailsScreen() {
               {(['male', 'female'] as Gender[]).map((g) => (
                 <Pressable
                   key={g}
-                  onPress={() => setGender(g)}
+                  onPress={() => { Keyboard.dismiss(); setGender(g); }}
                   style={[
                     styles.genderButton,
                     {
@@ -115,6 +116,8 @@ export default function DetailsScreen() {
                     placeholder={input.placeholder}
                     placeholderTextColor={colors.textSecondary}
                     keyboardType="numeric"
+                    returnKeyType="done"
+                    onSubmitEditing={Keyboard.dismiss}
                     style={[styles.input, { color: colors.text }]}
                   />
                   <Text style={[styles.unit, { color: colors.textSecondary }]}>{input.unit}</Text>
@@ -130,7 +133,7 @@ export default function DetailsScreen() {
               {ACTIVITY_LEVELS.map((al) => (
                 <Pressable
                   key={al.level}
-                  onPress={() => setActivity(al.level)}
+                  onPress={() => { Keyboard.dismiss(); setActivity(al.level); }}
                   style={[
                     styles.activityItem,
                     {
