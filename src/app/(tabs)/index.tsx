@@ -167,6 +167,17 @@ export default function HomeScreen() {
                 {t('strategy')}: {calories.strategy.toUpperCase()}
               </Text>
             </View>
+            <View style={styles.disclaimerContainer}>
+              <Ionicons name="information-circle-outline" size={14} color={colors.textSecondary} style={{ marginTop: 1 }} />
+              <View style={styles.disclaimerTextContainer}>
+                <Text style={[styles.disclaimerText, { color: colors.textSecondary }]}>
+                  {t('nutritionDisclaimer')}
+                </Text>
+                <Text style={[styles.sourcesText, { color: colors.textSecondary }]}>
+                  {t('nutritionSources')}
+                </Text>
+              </View>
+            </View>
           </Animated.View>
 
           <View style={{ height: 100 }} />
@@ -247,4 +258,15 @@ const styles = StyleSheet.create({
     marginTop: Spacing.two,
   },
   strategyText: { fontSize: 13, fontWeight: '700' },
+  disclaimerContainer: {
+    flexDirection: 'row',
+    gap: 6,
+    marginTop: Spacing.three,
+    paddingTop: Spacing.three,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: 'rgba(128,128,128,0.2)',
+  },
+  disclaimerTextContainer: { flex: 1, gap: 4 },
+  disclaimerText: { fontSize: 11, lineHeight: 15 },
+  sourcesText: { fontSize: 10, lineHeight: 14, fontStyle: 'italic' },
 });

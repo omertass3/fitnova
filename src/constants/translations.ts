@@ -188,6 +188,20 @@ const translations = {
   roadMap: { tr: 'Yol Haritası', en: 'Road Map', fr: 'Feuille de route', de: 'Trainingsplan' },
   tabRoadMap: { tr: 'Yol Haritası', en: 'Road Map', fr: 'Feuille de route', de: 'Trainingsplan' },
 
+  // Disclaimer & Citations
+  nutritionDisclaimer: {
+    tr: 'Beslenme değerleri genel bilgilendirme amaçlıdır ve tıbbi tavsiye niteliği taşımaz. Herhangi bir diyet veya egzersiz programına başlamadan önce doktorunuza danışın.',
+    en: 'Nutrition values are for general informational purposes only and do not constitute medical advice. Consult your physician before starting any diet or exercise program.',
+    fr: 'Les valeurs nutritionnelles sont fournies à titre informatif uniquement et ne constituent pas un avis médical. Consultez votre médecin avant de commencer tout régime ou programme d\'exercice.',
+    de: 'Die Nährwerte dienen nur der allgemeinen Information und stellen keine medizinische Beratung dar. Konsultieren Sie Ihren Arzt, bevor Sie mit einer Diät oder einem Trainingsprogramm beginnen.',
+  },
+  nutritionSources: {
+    tr: 'Kaynaklar: BMR hesaplaması Mifflin-St Jeor denklemine dayanmaktadır (Mifflin et al., 1990). Makro besin önerileri ISSN pozisyon bildirgesine dayanmaktadır (Jäger et al., 2017).',
+    en: 'Sources: BMR calculation is based on the Mifflin-St Jeor equation (Mifflin et al., 1990, The American Journal of Clinical Nutrition). Macronutrient recommendations are based on the ISSN position stand (Jäger et al., 2017, Journal of the International Society of Sports Nutrition).',
+    fr: 'Sources : Le calcul du MB est basé sur l\'équation de Mifflin-St Jeor (Mifflin et al., 1990, The American Journal of Clinical Nutrition). Les recommandations en macronutriments sont basées sur la position de l\'ISSN (Jäger et al., 2017, Journal of the International Society of Sports Nutrition).',
+    de: 'Quellen: Die GU-Berechnung basiert auf der Mifflin-St-Jeor-Gleichung (Mifflin et al., 1990, The American Journal of Clinical Nutrition). Die Makronährstoffempfehlungen basieren auf dem ISSN-Positionspapier (Jäger et al., 2017, Journal of the International Society of Sports Nutrition).',
+  },
+
   // Language
   language: { tr: 'Dil', en: 'Language', fr: 'Langue', de: 'Sprache' },
   turkish: { tr: 'Türkçe', en: 'Turkish', fr: 'Turc', de: 'Türkisch' },
