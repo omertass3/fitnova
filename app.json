@@ -53,6 +53,12 @@
         "projectId": "843e4156-f611-4133-b841-8ef25c610a6d"
       }
     },
-    "owner": "ometaas3"
+    "owner": "ometaas3",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/843e4156-f611-4133-b841-8ef25c610a6d"
+    }
   }
 }
