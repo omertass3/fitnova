@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Pressable, TextInput, Platform } from 'react-native';
+import { View, Text, StyleSheet, Pressable, TextInput, Platform, Keyboard } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState, useMemo } from 'react';
@@ -82,7 +82,7 @@ export default function TargetWeightScreen() {
   const diffText = diff > 0 ? '+' + diff.toFixed(1) + ' kg' : diff.toFixed(1) + ' kg';
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <Pressable style={[styles.container, { backgroundColor: colors.background }]} onPress={Keyboard.dismiss}>
       <SafeAreaView style={styles.safe}>
         <View style={styles.header}>
           <Text style={[styles.step, { color: colors.primary }]}>{t('step4of4')}</Text>
@@ -103,6 +103,8 @@ export default function TargetWeightScreen() {
                 value={targetWeight}
                 onChangeText={setTargetWeight}
                 keyboardType="decimal-pad"
+                returnKeyType="done"
+                onSubmitEditing={Keyboard.dismiss}
                 style={[styles.input, { color: colors.text }]}
                 placeholder="70"
                 placeholderTextColor={colors.textSecondary}
@@ -142,7 +144,7 @@ export default function TargetWeightScreen() {
           </Text>
         </Pressable>
       </SafeAreaView>
-    </View>
+    </Pressable>
   );
 }
 
