@@ -1,7 +1,7 @@
-import { View, Text, StyleSheet, Pressable, TextInput, Platform, Keyboard } from 'react-native';
+import { View, Text, StyleSheet, Pressable, TextInput, Platform, Keyboard, TouchableWithoutFeedback, InputAccessoryView } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 import { useColors } from '@/hooks/useThemeColor';
@@ -51,6 +51,8 @@ export default function TargetWeightScreen() {
 
   const [targetWeight, setTargetWeight] = useState(suggested.toString());
   const [loading, setLoading] = useState(false);
+  const inputRef = useRef<TextInput>(null);
+  const inputAccessoryViewID = 'targetWeightDone';
 
   const parsedTarget = parseFloat(targetWeight);
   const isValid = !isNaN(parsedTarget) && parsedTarget >= 30 && parsedTarget <= 300;
@@ -82,69 +84,83 @@ export default function TargetWeightScreen() {
   const diffText = diff > 0 ? '+' + diff.toFixed(1) + ' kg' : diff.toFixed(1) + ' kg';
 
   return (
-    <Pressable style={[styles.container, { backgroundColor: colors.background }]} onPress={Keyboard.dismiss}>
-      <SafeAreaView style={styles.safe}>
-        <View style={styles.header}>
-          <Text style={[styles.step, { color: colors.primary }]}>{t('step4of4')}</Text>
-          <Text style={[styles.title, { color: colors.text }]}>{t('targetWeightTitle')}</Text>
-          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>{t('targetWeightSubtitle')}</Text>
-        </View>
-
-        <Animated.View entering={FadeInDown.duration(400).delay(100)} style={styles.content}>
-          <View style={[styles.infoCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
-            <Text style={[styles.infoLabel, { color: colors.textSecondary }]}>{t('currentWeightLabel')}</Text>
-            <Text style={[styles.infoValue, { color: colors.text }]}>{String(currentWeight) + ' kg'}</Text>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <SafeAreaView style={styles.safe}>
+          <View style={styles.header}>
+            <Text style={[styles.step, { color: colors.primary }]}>{t('step4of4')}</Text>
+            <Text style={[styles.title, { color: colors.text }]}>{t('targetWeightTitle')}</Text>
+            <Text style={[styles.subtitle, { color: colors.textSecondary }]}>{t('targetWeightSubtitle')}</Text>
           </View>
 
-          <View style={[styles.inputCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
-            <Text style={[styles.inputLabel, { color: colors.text }]}>{t('targetWeightLabel')}</Text>
-            <View style={[styles.inputWrapper, { backgroundColor: colors.backgroundElement, borderColor: colors.border }]}>
-              <TextInput
-                value={targetWeight}
-                onChangeText={setTargetWeight}
-                keyboardType="decimal-pad"
-                returnKeyType="done"
-                onSubmitEditing={Keyboard.dismiss}
-                style={[styles.input, { color: colors.text }]}
-                placeholder="70"
-                placeholderTextColor={colors.textSecondary}
-              />
-              <Text style={[styles.unit, { color: colors.textSecondary }]}>{'kg'}</Text>
+          <Animated.View entering={FadeInDown.duration(400).delay(100)} style={styles.content}>
+            <View style={[styles.infoCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+              <Text style={[styles.infoLabel, { color: colors.textSecondary }]}>{t('currentWeightLabel')}</Text>
+              <Text style={[styles.infoValue, { color: colors.text }]}>{String(currentWeight) + ' kg'}</Text>
             </View>
-            {isValid && diff !== 0 ? (
-              <Text style={[styles.diff, { color: diff < 0 ? colors.accent : colors.primary }]}>{diffText}</Text>
-            ) : null}
-          </View>
 
-          <Animated.View entering={FadeInDown.duration(400).delay(200)}>
-            <Pressable
-              onPress={() => setTargetWeight(suggested.toString())}
-              style={[styles.suggestedBtn, { backgroundColor: colors.backgroundSelected, borderColor: colors.primary }]}
-            >
-              <Text style={[styles.suggestedLabel, { color: colors.primary }]}>{t('suggestedWeight') + ': ' + String(suggested) + ' kg'}</Text>
-            </Pressable>
+            <View style={[styles.inputCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+              <Text style={[styles.inputLabel, { color: colors.text }]}>{t('targetWeightLabel')}</Text>
+              <View style={[styles.inputWrapper, { backgroundColor: colors.backgroundElement, borderColor: colors.border }]}>
+                <TextInput
+                  ref={inputRef}
+                  value={targetWeight}
+                  onChangeText={setTargetWeight}
+                  keyboardType="decimal-pad"
+                  returnKeyType="done"
+                  blurOnSubmit={true}
+                  inputAccessoryViewID={Platform.OS === 'ios' ? inputAccessoryViewID : undefined}
+                  style={[styles.input, { color: colors.text }]}
+                  placeholder="70"
+                  placeholderTextColor={colors.textSecondary}
+                />
+                <Text style={[styles.unit, { color: colors.textSecondary }]}>{'kg'}</Text>
+              </View>
+              {isValid && diff !== 0 ? (
+                <Text style={[styles.diff, { color: diff < 0 ? colors.accent : colors.primary }]}>{diffText}</Text>
+              ) : null}
+            </View>
+
+            <Animated.View entering={FadeInDown.duration(400).delay(200)}>
+              <Pressable
+                onPress={() => { Keyboard.dismiss(); setTargetWeight(suggested.toString()); }}
+                style={[styles.suggestedBtn, { backgroundColor: colors.backgroundSelected, borderColor: colors.primary }]}
+              >
+                <Text style={[styles.suggestedLabel, { color: colors.primary }]}>{t('suggestedWeight') + ': ' + String(suggested) + ' kg'}</Text>
+              </Pressable>
+            </Animated.View>
           </Animated.View>
-        </Animated.View>
 
-        <View style={styles.spacer} />
+          <View style={styles.spacer} />
 
-        <Pressable
-          onPress={handleComplete}
-          disabled={!isValid || loading}
-          style={({ pressed }) => [
-            styles.button,
-            {
-              backgroundColor: isValid ? colors.accent : colors.border,
-              opacity: pressed || loading ? 0.8 : 1,
-            },
-          ]}
-        >
-          <Text style={[styles.buttonText, { color: isValid ? '#fff' : colors.textSecondary }]}>
-            {loading ? t('buildingPlan') : t('letsGo')}
-          </Text>
-        </Pressable>
-      </SafeAreaView>
-    </Pressable>
+          <Pressable
+            onPress={() => { Keyboard.dismiss(); handleComplete(); }}
+            disabled={!isValid || loading}
+            style={({ pressed }) => [
+              styles.button,
+              {
+                backgroundColor: isValid ? colors.accent : colors.border,
+                opacity: pressed || loading ? 0.8 : 1,
+              },
+            ]}
+          >
+            <Text style={[styles.buttonText, { color: isValid ? '#fff' : colors.textSecondary }]}>
+              {loading ? t('buildingPlan') : t('letsGo')}
+            </Text>
+          </Pressable>
+        </SafeAreaView>
+
+        {Platform.OS === 'ios' && (
+          <InputAccessoryView nativeID={inputAccessoryViewID}>
+            <View style={[styles.accessoryBar, { backgroundColor: colors.card, borderColor: colors.border }]}>
+              <Pressable onPress={() => inputRef.current?.blur()} hitSlop={8}>
+                <Text style={[styles.doneButton, { color: colors.primary }]}>Tamam</Text>
+              </Pressable>
+            </View>
+          </InputAccessoryView>
+        )}
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -186,4 +202,9 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.three + 2, borderRadius: BorderRadius.lg, alignItems: 'center',
   },
   buttonText: { fontSize: 18, fontWeight: '700' },
+  accessoryBar: {
+    flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center',
+    paddingHorizontal: 16, paddingVertical: 10, borderTopWidth: 1,
+  },
+  doneButton: { fontSize: 17, fontWeight: '600' },
 });
